@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Neighborhood Explorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="node_modules/semantic-ui-css/semantic.css">
+    <link rel="stylesheet" type="text/css" href="css/master.css" media="screen">
+  </head>
+  <body>
+    <div class="controls-bar">
+      <input id="address-search" class="controls" placeholder="Enter a new address to search" data-bind="enterkey: $root.clearListView"/>
+      <button id="check-places" class="ui button teal big-button" data-bind="click: $root.getData">Check for fun places in this area</button>
+    </div>
+
+    <div id="map-canvas"></div>
+
+    <div class="list-container" data-bind="with: locationFourSquareData">
+        <div class="ui styled accordion places-list" data-bind="foreach: items">
+          <div class="title places-list-item" data-bind="with: venue, click: $root.highlightMarker">
+            <i class="dropdown icon"></i>
+            <span data-bind="text: name"></span>
+          </div>
+          <div class="content" data-bind="with: venue">
+            <p>
+              Rating: <span data-bind="text: rating"></span>
+            </p>
+            <p data-bind="with: location">
+              Address:
+              <span data-bind="text: address"></span>
+              <span data-bind="text: city"></span>
+              <span data-bind="text: country"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    <!-- Templates -->
+    <div class="ui modal alert small">
+      <div class="header">Alert</div>
+      <div class="content" data-bind="text: alertText">Alert text</div>
+    </div>
+
+
+  <!-- Dependecies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script  src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAyAwpCoHZhdy8JoZeQJSQp3hNLQRjn0o"></script>
+    <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
+    <script src="node_modules/semantic-ui-css/semantic.js"></script>
+
+    </script>
+
+    <!-- APP Scripts -->
+    <script src="js/helper.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
