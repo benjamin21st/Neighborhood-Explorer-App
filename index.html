@@ -4,8 +4,20 @@
     <title>Neighborhood Explorer</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="node_modules/semantic-ui-css/semantic.css">
-    <link rel="stylesheet" type="text/css" href="css/master.css" media="screen">
+    <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.css">
+    <link rel="stylesheet" href="css/master.css" media="screen">
+    <link rel="stylesheet" href="css/mobile.css" media="(min-device-width: 320px)
+    and (max-device-width: 667px)">
+    <link rel="stylesheet" href="css/offline-theme-default.css">
+    <link rel="stylesheet" href="css/offline-language-english.css">
+    <script src="js/offline.min.js"></script>
+    <script>
+      var run = function(){
+       if (Offline.state === 'up')
+         Offline.check();
+       }
+       setInterval(run, 5000);
+    </script>
   </head>
   <body>
     <div class="controls-bar">
@@ -16,7 +28,13 @@
     <div id="map-canvas"></div>
 
     <div class="list-container" data-bind="with: locationFourSquareData">
-        <div class="ui styled accordion places-list" data-bind="foreach: items">
+        <div class="show-places ui button teal mobile-visible mobile-hidden float-right" data-bind="click: $root.showFunPlaces">
+          Show fun places
+        </div>
+        <div class="hide-places mobile-hidden ui button black float-right" data-bind="click: $root.hideFunPlaces">
+          Hide fun places
+        </div>
+        <div class="places-list ui styled accordion mobile-hidden" data-bind="foreach: items">
           <div class="title places-list-item" data-bind="with: venue, click: $root.highlightMarker">
             <i class="dropdown icon"></i>
             <span data-bind="text: name"></span>

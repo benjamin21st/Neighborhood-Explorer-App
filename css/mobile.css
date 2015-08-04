@@ -1,0 +1,7 @@
+.mobile-visible {
+  visibility: visible;
+}
+
+.mobile-hidden {
+  display: none !important;
+}
