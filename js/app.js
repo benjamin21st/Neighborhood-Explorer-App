@@ -77,8 +77,8 @@ $(function(){
 
         // Meanwhile, if this is the first in the array, set its location value to the global glat, glng
         if (j === 0) {
-          glat = marker.position.A;
-          glng = marker.position.F;
+          glat = marker.position.lat();
+          glng = marker.position.lng();
         }
 
         bounds.extend(place.geometry.location);
