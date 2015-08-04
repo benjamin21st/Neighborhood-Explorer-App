@@ -34,7 +34,7 @@ $(function(){
     self.searchBox = new google.maps.places.SearchBox((self.addressInput));
 
     // A clear Marker function that clears all markers currently on the map
-    function clearMarkers() {
+    self.clearMarkers = function () {
       // first remove all markers
       for (var i = 0; i < gMarkers.length; i++) {
         gMarkers[i].setMap(null);
@@ -43,12 +43,15 @@ $(function(){
       // Then clear up the gMarkers global variable
       gMarkers = [];
       self.markers = gMarkers;
-    }
+    };
 
     // Add event listener to search box,
     // When there is a new search, clear exsiting markers
     google.maps.event.addListener(self.searchBox, 'places_changed', function () {
-      clearMarkers();
+      // Clear existing markers on the map
+      self.clearMarkers();
+      // Change "open now" to false
+      listView.filterOpenedPlacesOnly(false);
 
       var places = self.searchBox.getPlaces();
 
@@ -115,6 +118,7 @@ $(function(){
     // Bind with Knockout stuff
     self.locationFourSquareData = ko.observable();
     self.alertText = ko.observable();
+    self.filterOpenedPlacesOnly = ko.observable(false);
 
     // Define listData which will later be retrieved from an api call
     self.listData = {};
@@ -145,12 +149,13 @@ $(function(){
         $('.list-container .show-places').removeClass('mobile-hidden');
         // Then make the accordion working as expected
         $('.places-list.accordion').accordion();
+        // Show filter group
+        $('.filter-group').removeClass('hidden');
 
-        return self.placeMarkers();
+        return self.placeMarkers(self.listData.items);
       }).
       fail(function () {
         // if request fails, pop up a warning
-        console.log('Failed');
         self.alertText('There was an error when requesting your data, please try again later.');
         $('.alert.modal').modal('show');
         $checkPlacesButton.removeClass('loading');
@@ -159,14 +164,17 @@ $(function(){
       });
     };
 
-    self.placeMarkers = function () {
+    self.placeMarkers = function (listData) {
       // Place markers for the places that are successfully retrieved
-      var places = self.listData.items,
+      var places = listData,
           name,
           lat, lng,
           iconUrl,
           bounds,
           item;
+
+      // Clear markers before placing new ones
+      mapView.clearMarkers();
 
       // Define bounds to be extended later
       bounds = new google.maps.LatLngBounds();
@@ -204,9 +212,11 @@ $(function(){
     };
 
     // A clear list View function to hide the listView when there is a new search
-    self.clearListView = function () {
+    self.resetSearch = function () {
       // Meanwhile, reset the list data
       self.locationFourSquareData({items: []});
+      $('.filter-group').addClass('hidden');
+      $('#check-places').removeClass('loading');
     };
 
     self.showListItemDetails = function (index) {
@@ -248,6 +258,60 @@ $(function(){
       $('.list-container .places-list').addClass('mobile-hidden');
       $('.list-container .hide-places').addClass('mobile-hidden');
       $('.list-container .show-places').removeClass('mobile-hidden');
+    };
+
+    self.showOpenedPlacesOnly = function () {
+      // When the "show opened places only" toggle is checked, grab the opened places and load this new data as new list
+      var newData = {},
+          openedPlacesList,
+          isOpen;
+
+      if (self.filterOpenedPlacesOnly()) {
+        openedPlacesList = [];
+
+        self.listData.items.forEach(function (place) {
+          if (place.venue.hours) {
+            isOpen = place.venue.hours.isOpen;
+          } else {
+            // Set isOpen to false by default
+            isOpen = false;
+          }
+
+          if (isOpen) {
+            openedPlacesList.push(place);
+          }
+        });
+
+        if (openedPlacesList.length === 0) {
+          alert("There are no places open in this area, please try again in a few hours or try another place.");
+          return false;
+        }
+
+        newData = {
+          type: self.listData.type,
+          name: self.listData.name,
+          items: openedPlacesList
+        };
+        // Load this new data back to the list view
+        self.locationFourSquareData(newData);
+        // And re-place the markers
+        self.placeMarkers(openedPlacesList);
+        // Show the newly updated list
+        $('.list-container .show-places').removeClass('mobile-hidden');
+        // Then make the accordion working as expected
+        // $('.places-list.accordion').accordion();
+
+      } else {
+        // Load this new data back to the list view
+        self.locationFourSquareData(self.listData);
+        // And re-place the markers
+        self.placeMarkers(self.listData.items);
+        // Show the newly updated list
+        $('.list-container .show-places').removeClass('mobile-hidden');
+        // Then make the accordion working as expected
+        // $('.places-list.accordion').accordion();
+      }
+      return true;
     };
   }
 
