@@ -108,7 +108,9 @@ $(function(){
 
     today = new Date();
     month = (today.getMonth() + 1);
-    version = String(today.getFullYear()) + String(month > 10 ? month : "0" + month) + String( today.getDate() );
+    day = (today.getDate());
+    // The two tertiary operator checks to see if we need to add a "0" before the single digit
+    version = String(today.getFullYear()) + String(month > 10 ? month : "0" + month) + String( day > 10 ? day : "0" + day );
 
     // Bind with Knockout stuff
     self.locationFourSquareData = ko.observable();
@@ -139,6 +141,8 @@ $(function(){
         self.locationFourSquareData(self.listData);
         // Remove the loading state of the button
         $checkPlacesButton.removeClass('loading');
+        // Enable the list toggle button for mobile devices
+        $('.list-container .show-places').removeClass('mobile-hidden');
         // Then make the accordion working as expected
         $('.places-list.accordion').accordion();
 
@@ -234,6 +238,17 @@ $(function(){
       activeMarker.setAnimation(google.maps.Animation.BOUNCE);
     };
 
+    self.showFunPlaces = function () {
+      $('.list-container .places-list').removeClass('mobile-hidden');
+      $('.list-container .hide-places').removeClass('mobile-hidden');
+      $('.list-container .show-places').addClass('mobile-hidden');
+    };
+
+    self.hideFunPlaces = function () {
+      $('.list-container .places-list').addClass('mobile-hidden');
+      $('.list-container .hide-places').addClass('mobile-hidden');
+      $('.list-container .show-places').removeClass('mobile-hidden');
+    };
   }
 
 
