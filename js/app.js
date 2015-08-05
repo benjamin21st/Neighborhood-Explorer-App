@@ -146,7 +146,7 @@ $(function(){
         // Remove the loading state of the button
         $checkPlacesButton.removeClass('loading');
         // Enable the list toggle button for mobile devices
-        $('.list-container .show-places').removeClass('mobile-hidden');
+        $('.list-container .show-places').removeClass('hidden');
         // Then make the accordion working as expected
         $('.places-list.accordion').accordion();
         // Show filter group
@@ -249,15 +249,15 @@ $(function(){
     };
 
     self.showFunPlaces = function () {
-      $('.list-container .places-list').removeClass('mobile-hidden');
-      $('.list-container .hide-places').removeClass('mobile-hidden');
-      $('.list-container .show-places').addClass('mobile-hidden');
+      $('.list-container .places-list').removeClass('hidden');
+      $('.list-container .hide-places').removeClass('hidden');
+      $('.list-container .show-places').addClass('hidden');
     };
 
     self.hideFunPlaces = function () {
-      $('.list-container .places-list').addClass('mobile-hidden');
-      $('.list-container .hide-places').addClass('mobile-hidden');
-      $('.list-container .show-places').removeClass('mobile-hidden');
+      $('.list-container .places-list').addClass('hidden');
+      $('.list-container .hide-places').addClass('hidden');
+      $('.list-container .show-places').removeClass('hidden');
     };
 
     self.showOpenedPlacesOnly = function () {
@@ -297,7 +297,7 @@ $(function(){
         // And re-place the markers
         self.placeMarkers(openedPlacesList);
         // Show the newly updated list
-        $('.list-container .show-places').removeClass('mobile-hidden');
+        $('.list-container .show-places').removeClass('hidden');
         // Then make the accordion working as expected
         // $('.places-list.accordion').accordion();
 
@@ -307,7 +307,7 @@ $(function(){
         // And re-place the markers
         self.placeMarkers(self.listData.items);
         // Show the newly updated list
-        $('.list-container .show-places').removeClass('mobile-hidden');
+        $('.list-container .show-places').removeClass('hidden');
         // Then make the accordion working as expected
         // $('.places-list.accordion').accordion();
       }
