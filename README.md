@@ -10,11 +10,9 @@ Once the dependencies `knockout.js` and `semantic ui` are installed, you can set
 * Open up a browser window and go to localhost:5001[localhost:5001] and you should be able to see this app running.
 
 ##How to use
-Using **Neighborhood Explorer** is simple, search a location in the search bar, it can be a detailed address or the name of a city, then press "enter" key. If the location on the map is what you were looking for, then click the **"Check for fun places in this area"** button. Then you should see a list of fun places recommended by FourSquare and their respective location marked on the map.
+Using **Neighborhood Explorer** is simple, search a location in the search bar, it can be a detailed address or the name of a city, then press "enter" key. If the location on the map is what you were looking for, then click the **"Check for fun places in this area"** button. Then you should see ten fun places recommended by FourSquare and their respective location marked on the map. If you want to learn more about them, you can click the **show fun places** button on bottom right.
 
 The **open now** filter is added so that you can find the fun places that are still open at the time you searched for it.
-
-If you are using mobile browser, you may need to click a **show fun places** button on bottom right if you don't see a list of popping up.
 
 Also please note that if you are on a smaller screen, the results may not be shown in full, but you can scroll down the list to view the rest of them.
 
