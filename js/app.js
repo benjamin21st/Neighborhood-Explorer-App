@@ -36,7 +36,7 @@ $(function(){
     // A clear Marker function that clears all markers currently on the map
     self.clearMarkers = function () {
       // first remove all markers
-      for (var i = 0; i < gMarkers.length; i++) {
+      for (var i = 0, gLength = gMarkers.length; i < gLength; i++) {
         gMarkers[i].setMap(null);
       }
 
