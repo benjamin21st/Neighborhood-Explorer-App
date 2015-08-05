@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.css">
-    <link rel="stylesheet" href="css/master.css" media="screen">
-    <link rel="stylesheet" href="css/mobile.css" media="(min-device-width: 320px)
-    and (max-device-width: 667px)">
     <link rel="stylesheet" href="css/offline-theme-default.css">
     <link rel="stylesheet" href="css/offline-language-english.css">
+    <link rel="stylesheet" href="css/master.css" media="screen">
+    <link rel="stylesheet" media="screen and (min-width: 320px) and (max-width: 667px)" href="css/mobile.css">
     <script src="js/offline.min.js"></script>
     <script>
       var run = function(){
@@ -21,10 +20,10 @@
   </head>
   <body>
     <div class="controls-bar">
-      <input id="address-search" class="controls" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
-      <button id="check-places" class="ui button teal big-button" data-bind="click: $root.getData">Check for fun places in this area</button>
+      <input id="address-search" class="controls address-search" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
+      <button id="check-places" class="controls check-places ui button teal big-button" data-bind="click: $root.getData">Check for fun places in this area</button>
 
-      <div class="filter-group hidden">
+      <div class="filter-group controls hidden">
         <div class="ui blue label">
           <label>Open now</label>
           <input type="checkbox" data-bind="checked: filterOpenedPlacesOnly, click: showOpenedPlacesOnly"/>
@@ -32,7 +31,7 @@
       </div>
     </div>
 
-    <div id="map-canvas"></div>
+    <div id="map-canvas" class="map-canvas"></div>
 
     <div class="list-container" data-bind="with: locationFourSquareData">
         <div class="show-places ui button teal hidden float-right" data-bind="click: $root.showFunPlaces">
@@ -72,8 +71,6 @@
     <script  src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAyAwpCoHZhdy8JoZeQJSQp3hNLQRjn0o"></script>
     <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
     <script src="node_modules/semantic-ui-css/semantic.js"></script>
-
-    </script>
 
     <!-- APP Scripts -->
     <script src="js/helper.js"></script>
