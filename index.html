@@ -11,11 +11,12 @@
     <link rel="stylesheet" media="screen and (min-width: 320px) and (max-width: 667px)" href="css/mobile.css">
     <script src="js/offline.min.js"></script>
     <script>
-      var run = function(){
-       if (Offline.state === 'up')
-         Offline.check();
-       }
-       setInterval(run, 5000);
+      var performOfflineCheck = function(){
+        if (Offline.state === 'up') {
+           Offline.check();
+        }
+      };
+      setInterval(performOfflineCheck, 1000);
     </script>
   </head>
   <body>
@@ -68,7 +69,7 @@
 
   <!-- Dependecies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script  src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAyAwpCoHZhdy8JoZeQJSQp3hNLQRjn0o"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAyAwpCoHZhdy8JoZeQJSQp3hNLQRjn0o"></script>
     <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
     <script src="node_modules/semantic-ui-css/semantic.js"></script>
 
