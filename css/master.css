@@ -10,6 +10,16 @@ body,
   display: none !important;
 }
 
+.conn-error.ui.message {
+  position: fixed;
+  top: 50px;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  width: 50%;
+  margin: auto;
+}
+
 .controls {
   margin: 16px auto auto auto;
   border: 1px solid transparent;

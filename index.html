@@ -9,17 +9,32 @@
     <link rel="stylesheet" href="css/offline-language-english.css">
     <link rel="stylesheet" href="css/master.css" media="screen">
     <link rel="stylesheet" media="screen and (min-width: 320px) and (max-width: 667px)" href="css/mobile.css">
-    <script src="js/offline.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script>
       var performOfflineCheck = function(){
-        if (Offline.state === 'up') {
-           Offline.check();
-        }
+        $.ajax({
+          url: "/conn_check.js",
+          type: "GET",
+          cache: false,
+          success: function () {
+            console.log("Connection OK");
+            if (!$('.conn-error').hasClass('hidden')) {
+              $('.conn-error').addClass('hidden');
+            }
+          },
+          error: function () {
+            console.log("Connection failed");
+            $('.conn-error').removeClass('hidden');
+          }
+        });
       };
       setInterval(performOfflineCheck, 1000);
     </script>
   </head>
   <body>
+    <div class="conn-error ui negative message hidden">
+      Connection lost, please try again later.
+    </div>
     <div class="controls-bar">
       <input id="address-search" class="controls address-search" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
       <button id="check-places" class="controls check-places ui button teal big-button" data-bind="click: $root.getData">Check for fun places in this area</button>
@@ -68,7 +83,6 @@
 
 
   <!-- Dependecies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDAyAwpCoHZhdy8JoZeQJSQp3hNLQRjn0o"></script>
     <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
     <script src="node_modules/semantic-ui-css/semantic.js"></script>
