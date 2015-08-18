@@ -8,13 +8,6 @@ $(function(){
   // Create global variable activeMarker to bind marker with a listItem
   var activeMarker;
 
-  /*
-    TODO:
-    1. search for fun places automatically after searching for a location in the search bar. (done)
-    2. Once search completes, further typing in the search bar does filtering
-    3. Once the enter key is pressed, do a new search
-    4. Update README.md file
-  */
   // views
   function MapViewModel() {
     var self = this;
@@ -77,20 +70,9 @@ $(function(){
       for (var j = 0, place, image; j < places.length; j++) {
         place = places[j];
 
-        // Create a marker for each place
-        marker = new google.maps.Marker({
-          map: self.map,
-          title: place.name,
-          position: place.geometry.location
-        });
-
-        self.markers.push(marker);
-
-        // Meanwhile, if this is the first in the array, set its location value to the global glat, glng
-        if (j === 0) {
-          glat = marker.position.lat();
-          glng = marker.position.lng();
-        }
+        // Store global variables for the queried location
+        glat = place.geometry.location.lat();
+        glng = place.geometry.location.lng();
 
         bounds.extend(place.geometry.location);
       }
@@ -103,9 +85,12 @@ $(function(){
     // Add event listener to search box,
     // When user updates the content, filter the list results
     $(self.addressInput).on('keyup', function () {
+      // A workaround to remove google map's search suggestions
+      if ($('.pac-container')) {
+        $('.pac-container').remove();
+      }
       listView.filterListedPlaces(this.value);
     });
-
 
     // Bias the SearchBox results towards places that are within the bounds of the
     // current map's viewport.
@@ -169,6 +154,9 @@ $(function(){
         $('.places-list.accordion').accordion();
         // Show filter group
         $('.filter-group').removeClass('hidden');
+        // Empty search box and change placeholder text
+        $('#address-search').val('');
+        $('#address-search').attr('placeholder','Filter or start a new search ...');
 
         return self.placeMarkers(self.listData.items);
       }).
@@ -215,10 +203,7 @@ $(function(){
         // Adjust bounds to include all results shown
         gMarkers.push(marker);
         bounds.extend(geoLocation);
-
-        if (refitBounds) {
-          mapView.map.fitBounds(bounds);
-        }
+        mapView.map.fitBounds(bounds);
 
         // Add click event listener to marker, when clicked, it shows details of that specific location in the list view
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -283,60 +268,6 @@ $(function(){
       $('.list-container .show-places').removeClass('hidden');
     };
 
-    self.showOpenedPlacesOnly = function () {
-      // When the "show opened places only" toggle is checked, grab the opened places and load this new data as new list
-      var newData = {},
-          openedPlacesList,
-          isOpen;
-
-      if (self.filterOpenedPlacesOnly()) {
-        openedPlacesList = [];
-
-        self.listData.items.forEach(function (place) {
-          if (place.venue.hours) {
-            isOpen = place.venue.hours.isOpen;
-          } else {
-            // Set isOpen to false by default
-            isOpen = false;
-          }
-
-          if (isOpen) {
-            openedPlacesList.push(place);
-          }
-        });
-
-        if (openedPlacesList.length === 0) {
-          alert("There are no places open in this area, please try again in a few hours or try another place.");
-          return false;
-        }
-
-        newData = {
-          type: self.listData.type,
-          name: self.listData.name,
-          items: openedPlacesList
-        };
-        // Load this new data back to the list view
-        self.locationFourSquareData(newData);
-        // And re-place the markers
-        self.placeMarkers(openedPlacesList);
-        // Show the newly updated list
-        $('.list-container .show-places').removeClass('hidden');
-        // Then make the accordion working as expected
-        // $('.places-list.accordion').accordion();
-
-      } else {
-        // Load this new data back to the list view
-        self.locationFourSquareData(self.listData);
-        // And re-place the markers
-        self.placeMarkers(self.listData.items);
-        // Show the newly updated list
-        $('.list-container .show-places').removeClass('hidden');
-        // Then make the accordion working as expected
-        // $('.places-list.accordion').accordion();
-      }
-      return true;
-    };
-
     self.filterListedPlaces = function (q) {
       /* Filter all the listed items by the keyword passed in */
       var filteredPlacesList = [],
@@ -348,10 +279,17 @@ $(function(){
           hiddenMarker,
           $placesList = $('.list-container .places-list');
 
+      // If no list data available, avoid going further
+      if (!listDataItems) {
+        return;
+      }
+
       // Only hide those results that are filtered out
       for (var i = 0, length = listDataItems.length; i < length; i++) {
         title = listDataItems[i].venue.name.toLowerCase();
-        if (title.indexOf(query) === -1) {
+        type = listDataItems[i].venue.categories[0].name.toLowerCase();
+
+        if ((title.indexOf(query) === -1) && (type.indexOf(query) === -1)) {
           // If not matching the query, hide the data list item along with the marker
           filteredPlacesList.push(listDataItems[i]);
           $($placesList.find('.places-list-item')[i]).addClass('hidden');
@@ -369,7 +307,6 @@ $(function(){
      };
     };
   }
-
 
   // start application
   var mapView = new MapViewModel();

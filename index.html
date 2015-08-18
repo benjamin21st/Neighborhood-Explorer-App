@@ -17,7 +17,6 @@
           type: "GET",
           cache: false,
           success: function () {
-            console.log("Connection OK");
             if (!$('.conn-error').hasClass('hidden')) {
               $('.conn-error').addClass('hidden');
             }
@@ -39,13 +38,6 @@
       <div class="search-control controls ui icon input">
         <input id="address-search" class="address-search" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
         <i class="search icon"></i>
-      </div>
-
-      <div class="filter-group controls hidden">
-        <div class="ui blue label">
-          <label>Open now</label>
-          <input type="checkbox" data-bind="checked: filterOpenedPlacesOnly, click: showOpenedPlacesOnly"/>
-        </div>
       </div>
     </div>
 
