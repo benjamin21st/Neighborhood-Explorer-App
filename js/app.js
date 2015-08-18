@@ -10,7 +10,7 @@ $(function(){
 
   /*
     TODO:
-    1. search for fun places automatically after searching for a location in the search bar.
+    1. search for fun places automatically after searching for a location in the search bar. (done)
     2. Once search completes, further typing in the search bar does filtering
     3. Once the enter key is pressed, do a new search
     4. Update README.md file
@@ -99,6 +99,14 @@ $(function(){
       listView.getData();
 
     });
+
+    // Add event listener to search box,
+    // When user updates the content, filter the list results
+    $(self.addressInput).on('keyup', function () {
+      listView.filterListedPlaces(this.value);
+    });
+
+
     // Bias the SearchBox results towards places that are within the bounds of the
     // current map's viewport.
     google.maps.event.addListener(self.map, 'bounds_changed', function() {
@@ -174,8 +182,10 @@ $(function(){
       });
     };
 
-    self.placeMarkers = function (listData) {
-      // Place markers for the places that are successfully retrieved
+    self.placeMarkers = function (listData, refitBounds) {
+      /* This function places markers for the palces that are successfully
+       * retrieved, and the second param is for refitting bounds or not.
+       */
       var places = listData,
           name,
           lat, lng,
@@ -205,7 +215,10 @@ $(function(){
         // Adjust bounds to include all results shown
         gMarkers.push(marker);
         bounds.extend(geoLocation);
-        mapView.map.fitBounds(bounds);
+
+        if (refitBounds) {
+          mapView.map.fitBounds(bounds);
+        }
 
         // Add click event listener to marker, when clicked, it shows details of that specific location in the list view
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -323,6 +336,38 @@ $(function(){
       }
       return true;
     };
+
+    self.filterListedPlaces = function (q) {
+      /* Filter all the listed items by the keyword passed in */
+      var filteredPlacesList = [],
+          listDataItems = self.listData.items,
+          newData,
+          query = q.toLowerCase(),
+          title,
+          hiddenItem,
+          hiddenMarker,
+          $placesList = $('.list-container .places-list');
+
+      // Only hide those results that are filtered out
+      for (var i = 0, length = listDataItems.length; i < length; i++) {
+        title = listDataItems[i].venue.name.toLowerCase();
+        if (title.indexOf(query) === -1) {
+          // If not matching the query, hide the data list item along with the marker
+          filteredPlacesList.push(listDataItems[i]);
+          $($placesList.find('.places-list-item')[i]).addClass('hidden');
+          gMarkers[i].setVisible(false);
+        } else {
+          $($placesList.find('.places-list-item')[i]).removeClass('hidden');
+          gMarkers[i].setVisible(true);
+        }
+      }
+
+      newData = {
+       type: self.listData.type,
+       name: self.listData.name,
+       items: filteredPlacesList
+     };
+    };
   }
 
 
@@ -332,5 +377,4 @@ $(function(){
 
   // Apply bindings to the listView to take advantage of Knockout JS's nice little features.
   ko.applyBindings(listView);
-
 });
