@@ -61,9 +61,11 @@
             </p>
             <p data-bind="with: location">
               Address:
+              <!-- ko if: typeof(address) !== 'undefined' -->
               <span data-bind="text: address"></span>
               <span data-bind="text: city"></span>
               <span data-bind="text: country"></span>
+              <!-- /ko -->
             </p>
           </div>
         </div>
