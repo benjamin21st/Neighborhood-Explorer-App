@@ -20,6 +20,14 @@ body,
   margin: auto;
 }
 
+.controls-bar {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .controls {
   margin: 16px auto auto auto;
   border: 1px solid transparent;
@@ -29,14 +37,6 @@ body,
   height: 32px;
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.controls-bar {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
 }
 
 .controls-bar
@@ -65,22 +65,12 @@ body,
   border-color: #4d90fe;
 }
 
-/* Haven't figure out what this is. */
-/*.pac-container {
-  font-family: Roboto;
+.controls-bar
+.search-control.ui.icon.input
+.search.icon {
+  font-size: 1.2em;
+  top: 5px;
 }
-
-#type-selector {
-  color: #fff;
-  background-color: #4d90fe;
-  padding: 5px 11px 0px 11px;
-}
-
-#type-selector label {
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 300;
-}*/
 
 .list-container {
   position: absolute;

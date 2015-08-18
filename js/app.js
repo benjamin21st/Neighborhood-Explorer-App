@@ -8,6 +8,13 @@ $(function(){
   // Create global variable activeMarker to bind marker with a listItem
   var activeMarker;
 
+  /*
+    TODO:
+    1. search for fun places automatically after searching for a location in the search bar.
+    2. Once search completes, further typing in the search bar does filtering
+    3. Once the enter key is pressed, do a new search
+    4. Update README.md file
+  */
   // views
   function MapViewModel() {
     var self = this;
@@ -47,6 +54,7 @@ $(function(){
 
     // Add event listener to search box,
     // When there is a new search, clear exsiting markers
+    // When search completes, automatically call the "getData function of listView"
     google.maps.event.addListener(self.searchBox, 'places_changed', function () {
       // Clear existing markers on the map
       self.clearMarkers();
@@ -87,7 +95,9 @@ $(function(){
         bounds.extend(place.geometry.location);
       }
 
-      self.map.fitBounds(bounds);
+      // Call getData function to grab some fun places
+      listView.getData();
+
     });
     // Bias the SearchBox results towards places that are within the bounds of the
     // current map's viewport.
@@ -107,7 +117,7 @@ $(function(){
         client_secret = "3QIH4R0RP4LFUWVDIX1MFDWADNJOS10L21CWXTPFI2H3O31K",
         version,
         today,
-        $checkPlacesButton = $('#check-places');
+        $searchControl = $('.search-control');
 
     today = new Date();
     month = (today.getMonth() + 1);
@@ -134,8 +144,8 @@ $(function(){
       // Construct a url for foursquare api call
       var url = 'https://api.foursquare.com/v2/venues/explore?ll=' + glat + ',' + glng + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version + '&limit=10';
 
-      // Add the loading state of the button
-      $checkPlacesButton.addClass('loading');
+      // Add loading class to search bar
+      $searchControl.addClass('loading');
 
       // Make API call
       $.get(url, function (data) {
@@ -144,7 +154,7 @@ $(function(){
         // Then we can forEach in listData.items
         self.locationFourSquareData(self.listData);
         // Remove the loading state of the button
-        $checkPlacesButton.removeClass('loading');
+        $searchControl.removeClass('loading');
         // Enable the list toggle button for mobile devices
         $('.list-container .show-places').removeClass('hidden');
         // Then make the accordion working as expected
@@ -158,7 +168,7 @@ $(function(){
         // if request fails, pop up a warning
         self.alertText('There was an error when requesting your data, please try again later.');
         $('.alert.modal').modal('show');
-        $checkPlacesButton.removeClass('loading');
+        $searchControl.removeClass('loading');
 
         return false;
       });
@@ -211,7 +221,7 @@ $(function(){
       }
     };
 
-    // A clear list View function to hide the listView when there is a new search
+    // This function resets current search
     self.resetSearch = function () {
       // Meanwhile, reset the list data
       self.locationFourSquareData({items: []});

@@ -36,8 +36,10 @@
       Connection lost, please try again later.
     </div>
     <div class="controls-bar">
-      <input id="address-search" class="controls address-search" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
-      <button id="check-places" class="controls check-places ui button teal big-button" data-bind="click: $root.getData">Check for fun places in this area</button>
+      <div class="search-control controls ui icon input">
+        <input id="address-search" class="address-search" placeholder="Enter a new address to search" data-bind="enterkey: $root.resetSearch"/>
+        <i class="search icon"></i>
+      </div>
 
       <div class="filter-group controls hidden">
         <div class="ui blue label">
